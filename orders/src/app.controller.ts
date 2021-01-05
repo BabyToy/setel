@@ -1,12 +1,21 @@
-import { Controller, Get } from '@nestjs/common';
-import { AppService } from './app.service';
+import { Controller, Get, Inject } from "@nestjs/common";
+import { ClientProxy } from "@nestjs/microservices";
+import { resolveTxt } from "dns";
+
+import { Message } from "./events/message.event";
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(@Inject("PAYMENTS_SERVICE") private readonly client: ClientProxy) {}
+
+  async onApplicationBootstrap() {
+    await this.client.connect();
+  }
 
   @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  getHello() {
+    const text = "From orders service"
+    this.client.emit<any>("print_message", new Message(text));
+    return text;
   }
 }
