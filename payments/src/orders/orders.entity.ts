@@ -13,9 +13,11 @@ export class Order {
   id: number;
 
   @Column()
+  @Index()
   customerId: number;
 
   @Column()
+  @Index()
   item: number;
 
   @Column()
@@ -28,7 +30,7 @@ export class Order {
   @Column()
   created: number;
 
-  @Column()
+  @Column({ nullable: true })
   updated: number;
 
   @BeforeUpdate()
