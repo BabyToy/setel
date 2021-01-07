@@ -1,8 +1,9 @@
 import { Controller } from "@nestjs/common";
 import { EventPattern, MessagePattern } from "@nestjs/microservices";
-import { createDto } from "src/dto/create.dto";
+import { cancelDto } from "src/common/dto/cancel.dto";
+import { createDto } from "src/common/dto/create.dto";
 
-@Controller('orders')
+@Controller("orders")
 export class OrdersController {
   constructor() {}
 
@@ -19,6 +20,11 @@ export class OrdersController {
 
   @MessagePattern({ cmd: "create-order" })
   async createOrder(order: createDto): Promise<createDto> {
+    return order;
+  }
+
+  @MessagePattern({ cmd: "cancel-order" })
+  async cancelOrder(order: cancelDto): Promise<cancelDto> {
     return order;
   }
 }
