@@ -1,6 +1,6 @@
 import { Controller } from "@nestjs/common";
 import { EventPattern, MessagePattern } from "@nestjs/microservices";
-import { Observable } from "rxjs";
+import { createDto } from "./dto/create.dto";
 
 @Controller()
 export class AppController {
@@ -20,5 +20,10 @@ export class AppController {
   async verifyOrder(orderId: number): Promise<number> {
     console.log(orderId);
     return 100;
+  }
+
+  @MessagePattern({ cmd: "create-order" })
+  async createOrder(order: createDto): Promise<createDto> {
+    return order;
   }
 }

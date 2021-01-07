@@ -1,11 +1,11 @@
 import { Module } from "@nestjs/common";
-import { ClientsModule, Transport } from "@nestjs/microservices";
 
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
+import { OrdersModule } from "./orders/orders.module";
 
 @Module({
-  imports: [ClientsModule.register([{ name: "PAYMENTS_SERVICE", transport: Transport.TCP }])],
+  imports: [OrdersModule],
   controllers: [AppController],
   providers: [AppService]
 })
