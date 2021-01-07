@@ -1,10 +1,15 @@
-import { Module } from "@nestjs/common";
-import { ClientsModule, Transport } from "@nestjs/microservices";
+import { Inject, Module } from "@nestjs/common";
+import { ClientProxy, ClientsModule, Transport } from "@nestjs/microservices";
 
 import { OrdersController } from "./orders.controller";
 
 @Module({
-  imports: [ClientsModule.register([{ name: "PAYMENTS_SERVICE", transport: Transport.TCP }])],
+  imports: [
+    ClientsModule.register([{ name: "PAYMENTS_SERVICE", transport: Transport.TCP }]),
+    OrdersModule
+  ],
   controllers: [OrdersController]
 })
-export class OrdersModule {}
+export class OrdersModule {
+  constructor(@Inject("PAYMENTS_SERVICE") private client: ClientProxy) {}
+}
