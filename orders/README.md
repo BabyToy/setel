@@ -30,6 +30,7 @@ Technology stack:
 - typeorm
 - sqlite3
 - swagger
+- eslint/prettier for code lint compliance
 
 Swagger documentation can be viewed [here](localhost:3000/swagger)
 
