@@ -1,10 +1,10 @@
 import { Body, Controller, Get, HttpException, HttpStatus, Inject, Post } from "@nestjs/common";
 import { ClientProxy } from "@nestjs/microservices";
 import { ApiOperation } from "@nestjs/swagger";
-import { createDto } from "src/common/dto/create.dto";
-import { idTokenDto } from "src/common/dto/idToken.dto";
+import { CreateDto } from "src/common/dto/create.dto";
+import { IdTokenDto } from "src/common/dto/idToken.dto";
 import { OrderDto } from "src/common/dto/order.dto";
-import { verifyDto } from "src/common/dto/verify.dto";
+import { VerifyDto } from "src/common/dto/verify.dto";
 import { IServiceOrderResponse } from "src/common/interfaces/IServiceOrderResponse";
 import { Message } from "src/events/message.event";
 
@@ -26,7 +26,7 @@ export class OrdersController {
 
   @Post("verify")
   @ApiOperation({ summary: "Verify an order" })
-  async verifyOrder(@Body() order: verifyDto): Promise<OrderDto> {
+  async verifyOrder(@Body() order: VerifyDto): Promise<OrderDto> {
     const response: IServiceOrderResponse = await this.client
       .send({ cmd: "verify-order" }, order.id)
       .toPromise();
@@ -38,7 +38,7 @@ export class OrdersController {
 
   @Post("create")
   @ApiOperation({ summary: "Create an order" })
-  async createOrder(@Body() order: createDto): Promise<OrderDto> {
+  async createOrder(@Body() order: CreateDto): Promise<OrderDto> {
     const response: IServiceOrderResponse = await this.client
       .send({ cmd: "create-order" }, order)
       .toPromise();
@@ -51,7 +51,7 @@ export class OrdersController {
 
   @Post("confirm")
   @ApiOperation({ summary: "Confirm an order" })
-  async confirmOrder(@Body() order: idTokenDto): Promise<OrderDto> {
+  async confirmOrder(@Body() order: IdTokenDto): Promise<OrderDto> {
     const response: IServiceOrderResponse = await this.client
       .send({ cmd: "confirm-order" }, order.orderId)
       .toPromise();
@@ -64,7 +64,7 @@ export class OrdersController {
 
   @Post("deliver")
   @ApiOperation({ summary: "Deliver an order" })
-  async deliverOrder(@Body() order: idTokenDto): Promise<OrderDto> {
+  async deliverOrder(@Body() order: IdTokenDto): Promise<OrderDto> {
     const response: IServiceOrderResponse = await this.client
       .send({ cmd: "deliver-order" }, order.orderId)
       .toPromise();
@@ -77,7 +77,7 @@ export class OrdersController {
 
   @Post("cancel")
   @ApiOperation({ summary: "Cancel an order" })
-  async cancelOrder(@Body() order: idTokenDto): Promise<OrderDto> {
+  async cancelOrder(@Body() order: IdTokenDto): Promise<OrderDto> {
     const response: IServiceOrderResponse = await this.client
       .send({ cmd: "cancel-order" }, order.orderId)
       .toPromise();

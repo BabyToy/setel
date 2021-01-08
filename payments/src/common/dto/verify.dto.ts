@@ -1,4 +1,4 @@
-export class verifyDto {
+export class VerifyDto {
   id: number;
   token: string;
 }

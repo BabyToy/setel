@@ -1,4 +1,4 @@
-export class idTokenDto {
+export class IdTokenDto {
   orderId: number;
   token: string;
 }

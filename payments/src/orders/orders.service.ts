@@ -1,6 +1,6 @@
 import { HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { createDto } from "src/common/dto/create.dto";
+import { CreateDto } from "src/common/dto/create.dto";
 import { IServiceOrderResponse } from "src/common/interfaces/IServiceOrderResponse";
 import { OrderState } from "src/common/orderState";
 import { Repository } from "typeorm";
@@ -14,7 +14,7 @@ export class OrdersService {
     private repository: Repository<Order>
   ) {}
 
-  async create(order: createDto): Promise<IServiceOrderResponse> {
+  async create(order: CreateDto): Promise<IServiceOrderResponse> {
     let newOrder = new Order();
     newOrder.customerId = order.customerId;
     newOrder.item = order.item;

@@ -1,8 +1,8 @@
 import { INestApplication } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import assert from "assert";
-import { createDto } from "src/common/dto/create.dto";
-import { verifyDto } from "src/common/dto/verify.dto";
+import { CreateDto } from "src/common/dto/create.dto";
+import { VerifyDto } from "src/common/dto/verify.dto";
 import request from "supertest";
 
 import { AppModule } from "./../src/app.module";
@@ -21,7 +21,7 @@ describe("Orders", () => {
   });
 
   it("Create order - forced decline", async () => {
-    const body: createDto = {
+    const body: CreateDto = {
       customerId: 1,
       item: 2,
       qty: 3,
@@ -37,7 +37,7 @@ describe("Orders", () => {
   });
 
   it("Verify order - forced decline", async () => {
-    const body: verifyDto = {
+    const body: VerifyDto = {
       id: orderId,
       token: "e2e-token"
     };
@@ -47,7 +47,7 @@ describe("Orders", () => {
   });
 
   it("Create order - forced approval", async () => {
-    const body: createDto = {
+    const body: CreateDto = {
       customerId: 1,
       item: 2,
       qty: 3,
@@ -60,7 +60,7 @@ describe("Orders", () => {
   });
 
   it("Verify order - forced decline", async () => {
-    const body: verifyDto = {
+    const body: VerifyDto = {
       id: orderId,
       token: "e2e-token"
     };

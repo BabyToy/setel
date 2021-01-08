@@ -1,6 +1,6 @@
 import { Controller } from "@nestjs/common";
 import { EventPattern, MessagePattern } from "@nestjs/microservices";
-import { createDto } from "src/common/dto/create.dto";
+import { CreateDto } from "src/common/dto/create.dto";
 import { IServiceOrderResponse } from "src/common/interfaces/IServiceOrderResponse";
 
 import { OrdersService } from "./orders.service";
@@ -21,7 +21,7 @@ export class OrdersController {
   }
 
   @MessagePattern({ cmd: "create-order" })
-  async createOrder(order: createDto): Promise<IServiceOrderResponse> {
+  async createOrder(order: CreateDto): Promise<IServiceOrderResponse> {
     const result = await this.service.create(order);
     return result;
   }
