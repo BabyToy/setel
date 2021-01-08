@@ -22,13 +22,19 @@ export class OrdersController {
 
   @MessagePattern({ cmd: "create-order" })
   async createOrder(order: createDto): Promise<IServiceOrderResponse> {
-    const newOrder = await this.service.create(order);
-    return newOrder;
+    const result = await this.service.create(order);
+    return result;
+  }
+
+  @MessagePattern({ cmd: "confirm-order" })
+  async confirmOrder(orderId: number): Promise<IServiceOrderResponse> {
+    const result = await this.service.confirm(orderId);
+    return result;
   }
 
   @MessagePattern({ cmd: "cancel-order" })
   async cancelOrder(orderId: number): Promise<IServiceOrderResponse> {
-    const cancelledOrder = await this.service.cancel(orderId);
-    return cancelledOrder;
+    const result = await this.service.cancel(orderId);
+    return result;
   }
 }

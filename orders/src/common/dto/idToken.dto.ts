@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 
-export class cancelDto {
+export class idTokenDto {
   @ApiProperty()
   orderId: number;
 

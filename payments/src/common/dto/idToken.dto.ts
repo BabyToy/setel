@@ -1,4 +1,4 @@
-export class cancelDto {
+export class idTokenDto {
   orderId: number;
   token: string;
 }

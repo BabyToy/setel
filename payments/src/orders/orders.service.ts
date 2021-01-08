@@ -45,6 +45,24 @@ export class OrdersService {
     return result;
   }
 
+  async confirm(orderId: number): Promise<IServiceOrderResponse> {
+    let result: IServiceOrderResponse = await this.verify(orderId);
+    if (result.status !== HttpStatus.OK) {
+      return result;
+    }
+    let order = result.order;
+    if (order.state !== OrderState.CREATED) {
+      result = { status: HttpStatus.BAD_REQUEST, message: "Order already confirmed/cancelled/delivered" };
+      return result;
+    }
+    order.state = OrderState.CONFIRMED;
+    order = await this.repository.save(order);
+
+    result.order = { ...order };
+    result.message = "Order cancelled";
+    return result;
+  }
+
   async cancel(orderId: number): Promise<IServiceOrderResponse> {
     let result: IServiceOrderResponse = await this.verify(orderId);
     if (result.status !== HttpStatus.OK) {
