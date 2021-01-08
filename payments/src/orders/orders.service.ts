@@ -22,8 +22,7 @@ export class OrdersService {
     newOrder.state = OrderState.CREATED;
     newOrder = await this.repository.save(newOrder);
 
-    // const approved = Math.floor(Math.random() * Math.floor(1)) === 1;
-    const approved = true;
+    const approved = Math.floor(Math.random() * Math.floor(1)) === 1;
     if (approved) {
       // move this order to confirmed
       const confirmation = await this.confirm(newOrder.id);
@@ -44,11 +43,10 @@ export class OrdersService {
       };
       return result;
     }
-    result = {
+    return {
       status: HttpStatus.OK,
       order
     };
-    return result;
   }
 
   async confirm(orderId: number): Promise<IServiceOrderResponse> {
