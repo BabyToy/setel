@@ -22,6 +22,18 @@
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
+## Victor's Notes
+This application consists of a client, and a payment processing microservices.
+
+Technology stack:  
+- nestjs
+- typeorm
+- sqlite3
+- swagger
+
+Swagger documentation can be viewed [here](localhost:3000/swagger)
+
+I still have a problem getting the e2e tests to work properly, but since this code is for review purposes it will have to suffice. I'll keep working on how to get it done properly in the meantime.
 ## Description
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
