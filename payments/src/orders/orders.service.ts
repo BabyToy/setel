@@ -1,5 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { RpcException } from "@nestjs/microservices";
+import { HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { createDto } from "src/common/dto/create.dto";
 import { IServiceOrderResponse } from "src/common/interfaces/IServiceOrderResponse";
@@ -15,38 +14,56 @@ export class OrdersService {
     private repository: Repository<Order>
   ) {}
 
-  async create(order: createDto) {
+  async create(order: createDto): Promise<IServiceOrderResponse> {
     const newOrder = new Order();
     newOrder.customerId = order.customerId;
     newOrder.item = order.item;
     newOrder.qty = order.qty;
     newOrder.state = OrderState.CREATED;
-    return this.repository.insert(newOrder);
+    const result = await this.repository.save(newOrder);
+    return {
+      status: HttpStatus.OK,
+      message: "Order created",
+      order: { ...result }
+    };
   }
 
-  async verify(orderId: number) {
+  async verify(orderId: number): Promise<IServiceOrderResponse> {
     let result: IServiceOrderResponse;
     const order = await this.repository.findOne(orderId);
     if (!order) {
       result = {
         status: HttpStatus.NOT_FOUND,
         message: "Order not found"
-      }
+      };
       return result;
     }
     result = {
       status: HttpStatus.OK,
       order
-    }
+    };
     return result;
   }
 
-  async cancel(orderId: number) {
-  //   const order = await this.verify(orderId);
-  //   if (order.status === OrderState.DELIVERED) {
-  //     throw new HttpException("Order already delivered", HttpStatus.BAD_REQUEST);
-  //   }
-  //   order.state = OrderState.CANCELLED;
-  //   return this.repository.save(order);
+  async cancel(orderId: number): Promise<IServiceOrderResponse> {
+    let result: IServiceOrderResponse = await this.verify(orderId);
+    if (result.status !== HttpStatus.OK) {
+      return result;
+    }
+    let order = result.order;
+    if (order.state === OrderState.CANCELLED) {
+      result = { status: HttpStatus.BAD_REQUEST, message: "Order already cancelled" };
+      return result;
+    }
+    if (order.state === OrderState.DELIVERED) {
+      result = { status: HttpStatus.BAD_REQUEST, message: "Order already delivered" };
+      return result;
+    }
+    order.state = OrderState.CANCELLED;
+    order = await this.repository.save(order);
+
+    result.order = { ...order };
+    result.message = "Order cancelled";
+    return result;
   }
 }
