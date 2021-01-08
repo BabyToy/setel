@@ -2,10 +2,14 @@ import { Controller } from "@nestjs/common";
 import { EventPattern, MessagePattern } from "@nestjs/microservices";
 import { cancelDto } from "src/common/dto/cancel.dto";
 import { createDto } from "src/common/dto/create.dto";
+import { IServiceOrderResponse } from "src/common/interfaces/IServiceOrderResponse";
+
+import { Order } from "./orders.entity";
+import { OrdersService } from "./orders.service";
 
 @Controller("orders")
 export class OrdersController {
-  constructor() {}
+  constructor(private readonly orderService: OrdersService) {}
 
   @EventPattern("verify-order")
   async verifyOrderHandler(data: Record<string, unknown>) {
@@ -13,18 +17,20 @@ export class OrdersController {
   }
 
   @MessagePattern({ cmd: "verify-order" })
-  async verifyOrder(orderId: number): Promise<number> {
-    console.log(orderId);
-    return 100;
+  async verifyOrder(orderId: number): Promise<IServiceOrderResponse> {
+    const result = await this.orderService.verify(orderId);
+    return result;
   }
 
   @MessagePattern({ cmd: "create-order" })
   async createOrder(order: createDto): Promise<createDto> {
-    return order;
+    const newOrder = await this.createOrder(order);
+    return newOrder;
   }
 
   @MessagePattern({ cmd: "cancel-order" })
   async cancelOrder(order: cancelDto): Promise<cancelDto> {
-    return order;
+    const cancelledOrder = await this.cancelOrder(order);
+    return cancelledOrder;
   }
 }

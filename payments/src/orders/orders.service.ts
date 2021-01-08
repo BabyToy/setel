@@ -1,6 +1,8 @@
-import { Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { RpcException } from "@nestjs/microservices";
 import { InjectRepository } from "@nestjs/typeorm";
 import { createDto } from "src/common/dto/create.dto";
+import { IServiceOrderResponse } from "src/common/interfaces/IServiceOrderResponse";
 import { OrderState } from "src/common/orderState";
 import { Repository } from "typeorm";
 
@@ -19,6 +21,32 @@ export class OrdersService {
     newOrder.item = order.item;
     newOrder.qty = order.qty;
     newOrder.state = OrderState.CREATED;
-    return await this.repository.insert(newOrder);
+    return this.repository.insert(newOrder);
+  }
+
+  async verify(orderId: number) {
+    let result: IServiceOrderResponse;
+    const order = await this.repository.findOne(orderId);
+    if (!order) {
+      result = {
+        status: HttpStatus.NOT_FOUND,
+        message: "Order not found"
+      }
+      return result;
+    }
+    result = {
+      status: HttpStatus.OK,
+      order
+    }
+    return result;
+  }
+
+  async cancel(orderId: number) {
+  //   const order = await this.verify(orderId);
+  //   if (order.status === OrderState.DELIVERED) {
+  //     throw new HttpException("Order already delivered", HttpStatus.BAD_REQUEST);
+  //   }
+  //   order.state = OrderState.CANCELLED;
+  //   return this.repository.save(order);
   }
 }

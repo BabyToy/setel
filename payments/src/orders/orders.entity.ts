@@ -28,18 +28,18 @@ export class Order {
   state: string;
 
   @Column()
-  created: number;
+  created: Date;
 
   @Column({ nullable: true })
-  updated: number;
+  updated: Date;
 
   @BeforeUpdate()
   setUpdated() {
-    this.updated = Date.now() / 1000;
+    this.updated = new Date();
   }
 
   @BeforeInsert()
   setCreated() {
-    this.created = Date.now() / 1000;
+    this.created = new Date();
   }
 }

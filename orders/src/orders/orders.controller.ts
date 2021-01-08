@@ -1,10 +1,12 @@
-import { Body, Controller, Get, Inject, Post } from "@nestjs/common";
+import { Body, Controller, Get, HttpException, HttpStatus, Inject, Post } from "@nestjs/common";
 import { ClientProxy } from "@nestjs/microservices";
 import { ApiOperation } from "@nestjs/swagger";
 import { Observable } from "rxjs";
 import { cancelDto } from "src/common/dto/cancel.dto";
 import { createDto } from "src/common/dto/create.dto";
+import { OrderDto } from "src/common/dto/order.dto";
 import { verifyDto } from "src/common/dto/verify.dto";
+import { IServiceOrderResponse } from "src/common/interfaces/IServiceOrderResponse";
 import { Message } from "src/events/message.event";
 
 @Controller("/orders")
@@ -25,8 +27,12 @@ export class OrdersController {
 
   @Post("/verify")
   @ApiOperation({ summary: "Verify an order" })
-  verifyOrder(@Body() order: verifyDto): Observable<number> {
-    return this.client.send<number>({ cmd: "verify-order" }, order.id);
+  async verifyOrder(@Body() order: verifyDto): Promise<OrderDto> {
+    const response: IServiceOrderResponse = await this.client.send({ cmd: "verify-order" }, order.id).toPromise();
+    if (response.status !== HttpStatus.OK) {
+      throw new HttpException(response.message, response.status);
+    }
+    return { status: response.status, order: response.order };
   }
 
   @Post("/create")
