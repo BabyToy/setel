@@ -15,17 +15,23 @@ export class OrdersService {
   ) {}
 
   async create(order: createDto): Promise<IServiceOrderResponse> {
-    const newOrder = new Order();
+    let newOrder = new Order();
     newOrder.customerId = order.customerId;
     newOrder.item = order.item;
     newOrder.qty = order.qty;
     newOrder.state = OrderState.CREATED;
-    const result = await this.repository.save(newOrder);
-    return {
-      status: HttpStatus.OK,
-      message: "Order created",
-      order: { ...result }
-    };
+    newOrder = await this.repository.save(newOrder);
+
+    // const approved = Math.floor(Math.random() * Math.floor(1)) === 1;
+    const approved = true;
+    if (approved) {
+      // move this order to confirmed
+      const confirmation = await this.confirm(newOrder.id);
+      return confirmation;
+    }
+    // declined, cancel this order
+    const cancellation = await this.cancel(newOrder.id);
+    return cancellation;
   }
 
   async verify(orderId: number): Promise<IServiceOrderResponse> {
@@ -52,15 +58,38 @@ export class OrdersService {
     }
     let order = result.order;
     if (order.state !== OrderState.CREATED) {
-      result = { status: HttpStatus.BAD_REQUEST, message: "Order already confirmed/cancelled/delivered" };
+      result = {
+        status: HttpStatus.BAD_REQUEST,
+        message: "Order already confirmed/cancelled/delivered"
+      };
       return result;
     }
     order.state = OrderState.CONFIRMED;
     order = await this.repository.save(order);
 
+    // simulate approval, 10s
+    setTimeout(confirmedId => {
+      this.deliver(order.id);
+    }, 10000);
+
     result.order = { ...order };
     result.message = "Order cancelled";
     return result;
+  }
+
+  async deliver(orderId: number): Promise<IServiceOrderResponse> {
+    let result: IServiceOrderResponse = await this.verify(orderId);
+    if (result.status !== HttpStatus.OK) {
+      return result;
+    }
+    if (result.status !== HttpStatus.OK) {
+      return { status: HttpStatus.INTERNAL_SERVER_ERROR, message: "Order is unconfirmed" };
+    }
+    // get a fresh object
+    let order = await this.repository.findOne(orderId);
+    order.state = OrderState.DELIVERED;
+    order = await this.repository.save(order);
+    return { status: HttpStatus.OK, message: "Order delivered", order: { ...order } };
   }
 
   async cancel(orderId: number): Promise<IServiceOrderResponse> {

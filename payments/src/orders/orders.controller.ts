@@ -37,4 +37,10 @@ export class OrdersController {
     const result = await this.service.cancel(orderId);
     return result;
   }
+
+  @MessagePattern({ cmd: "deliver-order" })
+  async deliverOrder(orderId: number): Promise<IServiceOrderResponse> {
+    const result = await this.service.deliver(orderId);
+    return result;
+  }
 }

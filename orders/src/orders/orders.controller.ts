@@ -45,6 +45,7 @@ export class OrdersController {
     if (response.status !== HttpStatus.OK) {
       throw new HttpException(response.message, response.status);
     }
+
     return { status: response.status, order: response.order };
   }
 
@@ -53,6 +54,19 @@ export class OrdersController {
   async confirmOrder(@Body() order: idTokenDto): Promise<OrderDto> {
     const response: IServiceOrderResponse = await this.client
       .send({ cmd: "confirm-order" }, order.orderId)
+      .toPromise();
+    // return this.client.send<cancelDto>({ cmd: "cancel-order" }, order).toPromise();
+    if (response.status !== HttpStatus.OK) {
+      throw new HttpException(response.message, response.status);
+    }
+    return { status: response.status, order: response.order };
+  }
+
+  @Post("deliver")
+  @ApiOperation({ summary: "Deliver an order" })
+  async deliverOrder(@Body() order: idTokenDto): Promise<OrderDto> {
+    const response: IServiceOrderResponse = await this.client
+      .send({ cmd: "deliver-order" }, order.orderId)
       .toPromise();
     // return this.client.send<cancelDto>({ cmd: "cancel-order" }, order).toPromise();
     if (response.status !== HttpStatus.OK) {
