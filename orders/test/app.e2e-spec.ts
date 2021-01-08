@@ -11,7 +11,7 @@ describe("Orders", () => {
   let app: INestApplication;
   let orderId: number | undefined = undefined;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule]
     }).compile();
