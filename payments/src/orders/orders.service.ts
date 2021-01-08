@@ -22,7 +22,14 @@ export class OrdersService {
     newOrder.state = OrderState.CREATED;
     newOrder = await this.repository.save(newOrder);
 
-    const approved = Math.floor(Math.random() * Math.floor(1)) === 1;
+    // allow forced approval for e2d
+
+    const approved = order.jgnpsiqbjxkdudavkrmafdrq !== undefined
+      ? // under e2e
+        // order will approve or decline automatically
+        order.jgnpsiqbjxkdudavkrmafdrq
+      : // not under e2e
+        Math.floor(Math.random() * Math.floor(1)) === 1;
     if (approved) {
       // move this order to confirmed
       const confirmation = await this.confirm(newOrder.id);

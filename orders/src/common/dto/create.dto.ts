@@ -12,4 +12,9 @@ export class createDto {
 
   @ApiProperty()
   token: string;
+
+  // for e2e testing
+  // true if forced approval
+  // false if forced decline
+  jgnpsiqbjxkdudavkrmafdrq?: boolean;
 }
