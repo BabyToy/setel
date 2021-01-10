@@ -46,6 +46,7 @@
         "--config",
         "${workspaceRoot}/test/jest-e2e.json"
       ],
+      "preLaunchTask": "npm: build",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen"
     }
