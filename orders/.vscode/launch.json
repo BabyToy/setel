@@ -25,20 +25,19 @@
       "sourceMaps": true
     },
     {
-      "type": "node",
+      "type": "pwa-node",
       "request": "launch",
       "name": "Launch Program",
       "skipFiles": ["<node_internals>/**"],
       "sourceMaps": true,
-      "protocol": "inspector",
       "console": "integratedTerminal",
-      "preLaunchTask": "tsc: build - tsconfig.json",
+      "preLaunchTask": "npm: build",
       "program": "${workspaceFolder}\\dist\\main.js",
       "outFiles": ["${workspaceFolder}/**/*.js"]
     },
     {
       "name": "Debug Jest Tests",
-      "type": "node",
+      "type": "pwa-node",
       "request": "launch",
       "runtimeArgs": [
         "--inspect-brk",
