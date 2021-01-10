@@ -3,7 +3,8 @@ import { Test, TestingModule } from "@nestjs/testing";
 import assert from "assert";
 import { CreateDto } from "src/common/dto/create.dto";
 import { VerifyDto } from "src/common/dto/verify.dto";
-import request from "supertest";
+// import request from "supertest";
+const request = require("supertest");
 
 import { AppModule } from "./../src/app.module";
 
@@ -32,12 +33,16 @@ describe("Orders", () => {
       token: "test-token",
       jgnpsiqbjxkdudavkrmafdrq: false
     };
-    const response = await request(app.getHttpServer()).post("/orders/create").send(body);
-    assert.strictEqual(response.status, 400);
-    assert.strictEqual(response.body.message, "Order is cancelled");
+    try {
+      const response = await request(app.getHttpServer()).post("/orders/create").send(body);
+      assert.strictEqual(response.status, 200);
+      assert.strictEqual(response.body.order.state, "CANCELLED");
 
-    orderId = response.body.order.id as number;
-    assert(orderId);
+      orderId = response.body.order.id as number;
+      assert(orderId);
+    } catch (e) {
+      assert.fail(e.message);
+    }
   });
 
   it("Verify order - forced decline", async () => {

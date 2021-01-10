@@ -23,7 +23,11 @@ export class OrdersService {
     newOrder = await this.repository.save(newOrder);
 
     // allow forced approval for e2d
-    const approved = order.jgnpsiqbjxkdudavkrmafdrq !== undefined
+    const e2eActive = order.jgnpsiqbjxkdudavkrmafdrq !== undefined;
+    if (e2eActive) {
+      console.log(`Under e2e - auto-{order.jgnpsiqbjxkdudavkrmafdrq ? "approve" : "decline"} in effect`);
+    }
+    const approved = e2eActive
       ? // under e2e
         // order will approve or decline automatically
         order.jgnpsiqbjxkdudavkrmafdrq
