@@ -20,6 +20,10 @@ describe("Orders", () => {
     await app.init();
   });
 
+  afterAll(async () => {
+    await app.close();
+  });
+
   it("Create order - forced decline", async () => {
     const body: CreateDto = {
       customerId: 1,

@@ -37,15 +37,18 @@
       "outFiles": ["${workspaceFolder}/**/*.js"]
     },
     {
+      "name": "Debug Jest Tests",
       "type": "node",
       "request": "launch",
-      "name": "Jest Tests",
-      "program": "${workspaceRoot}\\node_modules\\jest\\bin\\jest.js",
-      "args": ["-i"],
-      "preLaunchTask": "build",
-      "internalConsoleOptions": "openOnSessionStart",
-      "outFiles": ["${workspaceRoot}/dist/**/*"],
-      "envFile": "${workspaceRoot}/.env"
+      "runtimeArgs": [
+        "--inspect-brk",
+        "${workspaceRoot}/node_modules/jest/bin/jest.js",
+        "--runInBand",
+        "--config",
+        "${workspaceRoot}/test/jest-e2e.json"
+      ],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
     }
   ]
 }
