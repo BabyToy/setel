@@ -25,11 +25,16 @@ export class OrdersService {
     // allow forced approval for e2d
     const e2eActive = order.jgnpsiqbjxkdudavkrmafdrq !== undefined;
     if (e2eActive) {
-      console.log(`Under e2e - auto-{order.jgnpsiqbjxkdudavkrmafdrq ? "approve" : "decline"} in effect`);
+      if (order.jgnpsiqbjxkdudavkrmafdrq) {
+        console.log("Auto-approve in e2e");
+      } else {
+        console.log("Auto-decline in e2e");
+      }
     }
     const approved = e2eActive
       ? // under e2e
         // order will approve or decline automatically
+        // true: auto-approve
         order.jgnpsiqbjxkdudavkrmafdrq
       : // not under e2e
         // simulate random approve/decline
@@ -118,6 +123,7 @@ export class OrdersService {
     order.state = OrderState.CANCELLED;
     order = await this.repository.save(order);
 
+    result.status = HttpStatus.INTERNAL_SERVER_ERROR;
     result.order = { ...order };
     result.message = "Order cancelled";
     return result;

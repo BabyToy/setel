@@ -1,4 +1,13 @@
-import { Body, Controller, Get, HttpException, HttpStatus, Inject, Post } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  HttpException,
+  HttpStatus,
+  Inject,
+  Post,
+  Res
+} from "@nestjs/common";
 import { ClientProxy } from "@nestjs/microservices";
 import { ApiOperation } from "@nestjs/swagger";
 import { CreateDto } from "src/common/dto/create.dto";
@@ -26,65 +35,70 @@ export class OrdersController {
 
   @Post("verify")
   @ApiOperation({ summary: "Verify an order" })
-  async verifyOrder(@Body() order: VerifyDto): Promise<OrderDto> {
-    const response: IServiceOrderResponse = await this.client
+  async verifyOrder(@Body() order: VerifyDto, @Res() response) {
+    const result: IServiceOrderResponse = await this.client
       .send({ cmd: "verify-order" }, order.id)
       .toPromise();
-    if (response.status !== HttpStatus.OK) {
-      throw new HttpException(response.message, response.status);
+    if (result.status !== HttpStatus.OK) {
+      throw new HttpException(result.message, result.status);
     }
-    return { status: response.status, order: response.order };
+    return response.status(result.status).json({ status: result.status, order: result.order });
   }
 
   @Post("create")
   @ApiOperation({ summary: "Create an order" })
-  async createOrder(@Body() order: CreateDto): Promise<OrderDto> {
-    const response: IServiceOrderResponse = await this.client
+  async createOrder(@Body() order: CreateDto, @Res() response): Promise<OrderDto> {
+    const result: IServiceOrderResponse = await this.client
       .send({ cmd: "create-order" }, order)
       .toPromise();
-    if (response.status !== HttpStatus.OK) {
-      throw new HttpException(response.message, response.status);
-    }
 
-    return { status: response.status, order: response.order };
+    return response
+      .status(result.status)
+      .json({ status: result.status, order: result.order, message: result.message });
   }
 
   @Post("confirm")
   @ApiOperation({ summary: "Confirm an order" })
-  async confirmOrder(@Body() order: IdTokenDto): Promise<OrderDto> {
-    const response: IServiceOrderResponse = await this.client
+  async confirmOrder(@Body() order: IdTokenDto, @Res() response): Promise<OrderDto> {
+    const result: IServiceOrderResponse = await this.client
       .send({ cmd: "confirm-order" }, order.orderId)
       .toPromise();
     // return this.client.send<cancelDto>({ cmd: "cancel-order" }, order).toPromise();
-    if (response.status !== HttpStatus.OK) {
-      throw new HttpException(response.message, response.status);
+    if (result.status !== HttpStatus.NOT_FOUND) {
+      throw new HttpException(result.message, result.status);
     }
-    return { status: response.status, order: response.order };
+
+    return response
+      .status(result.status)
+      .json({ status: result.status, order: result.order, message: result.message });
   }
 
   @Post("deliver")
   @ApiOperation({ summary: "Deliver an order" })
-  async deliverOrder(@Body() order: IdTokenDto): Promise<OrderDto> {
-    const response: IServiceOrderResponse = await this.client
+  async deliverOrder(@Body() order: IdTokenDto, @Res() response): Promise<OrderDto> {
+    const result: IServiceOrderResponse = await this.client
       .send({ cmd: "deliver-order" }, order.orderId)
       .toPromise();
-    // return this.client.send<cancelDto>({ cmd: "cancel-order" }, order).toPromise();
-    if (response.status !== HttpStatus.OK) {
-      throw new HttpException(response.message, response.status);
+    if (result.status !== HttpStatus.NOT_FOUND) {
+      throw new HttpException(result.message, result.status);
     }
-    return { status: response.status, order: response.order };
+
+    return response
+      .status(result.status)
+      .json({ status: result.status, order: result.order, message: result.message });
   }
 
   @Post("cancel")
   @ApiOperation({ summary: "Cancel an order" })
-  async cancelOrder(@Body() order: IdTokenDto): Promise<OrderDto> {
-    const response: IServiceOrderResponse = await this.client
+  async cancelOrder(@Body() order: IdTokenDto, @Res() response): Promise<OrderDto> {
+    const result: IServiceOrderResponse = await this.client
       .send({ cmd: "cancel-order" }, order.orderId)
       .toPromise();
-    // return this.client.send<cancelDto>({ cmd: "cancel-order" }, order).toPromise();
-    if (response.status !== HttpStatus.OK) {
-      throw new HttpException(response.message, response.status);
+    if (result.status !== HttpStatus.NOT_FOUND) {
+      throw new HttpException(result.message, result.status);
     }
-    return { status: response.status, order: response.order };
+    return response
+      .status(result.status)
+      .json({ status: result.status, order: result.order, message: result.message });
   }
 }

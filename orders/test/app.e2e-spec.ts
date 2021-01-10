@@ -1,12 +1,20 @@
-import { INestApplication } from "@nestjs/common";
+import { HttpStatus, INestApplication } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
-import assert from "assert";
 import { CreateDto } from "src/common/dto/create.dto";
 import { VerifyDto } from "src/common/dto/verify.dto";
-// import request from "supertest";
-const request = require("supertest");
+import { IOrder } from "src/common/interfaces/IOrder";
+import { OrderState } from "src/common/orderState";
 
 import { AppModule } from "./../src/app.module";
+
+const request = require("supertest");
+const assert = require("assert");
+
+async function forIt(milliseconds: number) {
+  return new Promise(resolve => {
+    setTimeout(resolve, milliseconds);
+  });
+}
 
 describe("Orders", () => {
   let app: INestApplication;
@@ -33,16 +41,16 @@ describe("Orders", () => {
       token: "test-token",
       jgnpsiqbjxkdudavkrmafdrq: false
     };
-    try {
-      const response = await request(app.getHttpServer()).post("/orders/create").send(body);
-      assert.strictEqual(response.status, 200);
-      assert.strictEqual(response.body.order.state, "CANCELLED");
+    const response = await request(app.getHttpServer())
+      .post("/orders/create")
+      .send(body)
+      .set("Accept", "application/json");
+    assert.strictEqual(response.status, HttpStatus.INTERNAL_SERVER_ERROR);
+    const thisOrder: IOrder = response.body.order;
+    assert.strictEqual(thisOrder.state, OrderState.CANCELLED);
 
-      orderId = response.body.order.id as number;
-      assert(orderId);
-    } catch (e) {
-      assert.fail(e.message);
-    }
+    orderId = thisOrder.id;
+    assert(orderId);
   });
 
   it("Verify order - forced decline", async () => {
@@ -50,9 +58,13 @@ describe("Orders", () => {
       id: orderId,
       token: "e2e-token"
     };
-    const response = await request(app.getHttpServer()).post("/orders/verify").send(body);
-    assert.strictEqual(response.status, 200);
-    assert.strictEqual(response.body.message, "Order is cancelled");
+    const response = await request(app.getHttpServer())
+      .post("/orders/verify")
+      .send(body)
+      .set("Accept", "application/json");
+    assert.strictEqual(response.status, HttpStatus.OK);
+    const thisOrder: IOrder = response.body.order;
+    assert.strictEqual(thisOrder.state, OrderState.CANCELLED);
   });
 
   it("Create order - forced approval", async () => {
@@ -63,18 +75,28 @@ describe("Orders", () => {
       token: "test-token",
       jgnpsiqbjxkdudavkrmafdrq: true
     };
-    const response = await request(app.getHttpServer()).post("/orders/create").send(body);
-    assert.strictEqual(response.status, 200);
-    assert.strictEqual(response.body.message, "Order is confirmed");
-  });
+    let response = await request(app.getHttpServer())
+      .post("/orders/create")
+      .send(body)
+      .set("Accept", "application/json");
+    assert.strictEqual(response.status, HttpStatus.OK);
+    let thisOrder: IOrder = response.body.order;
+    assert.strictEqual(thisOrder.state, OrderState.CONFIRMED);
 
-  it("Verify order - forced decline", async () => {
-    const body: VerifyDto = {
+    orderId = thisOrder.id;
+    // wait for the payments service to process the order
+    await forIt(11000);
+
+    const verifyBody: VerifyDto = {
       id: orderId,
       token: "e2e-token"
     };
-    const response = await request(app.getHttpServer()).post("/orders/verify").send(body);
-    assert.strictEqual(response.status, 200);
-    assert.strictEqual(response.body.message, "Order is delivered");
+    response = await request(app.getHttpServer())
+      .post("/orders/verify")
+      .send(verifyBody)
+      .set("Accept", "application/json");
+    assert.strictEqual(response.status, HttpStatus.OK);
+    thisOrder = response.body.order;
+    assert.strictEqual(thisOrder.state, OrderState.DELIVERED);
   });
 });
