@@ -33,7 +33,7 @@
       "console": "integratedTerminal",
       "preLaunchTask": "npm: build",
       "program": "${workspaceFolder}\\dist\\main.js",
-      "outFiles": ["${workspaceFolder}/**/*.js"]
+      "outFiles": ["${workspaceFolder}/dist/**/*.js"]
     },
     {
       "name": "Debug Jest Tests",
