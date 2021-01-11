@@ -33,9 +33,7 @@ Technology stack:
 - eslint/prettier for code lint compliance
 - jest/assert for e2e testing
 
-Swagger documentation can be viewed at localhost:3000/swagger
-
-~~~I still have a problem getting the e2e tests to work properly, but since this code is for review purposes it will have to suffice. I'll keep working on how to get it done properly in the meantime.~~
+Swagger documentation can be viewed at [swagger doc at localhost](localhost:3000/swagger)
 
 The issues for e2e test are resolved and now run correctly. All assertions are correct.
 
