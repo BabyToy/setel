@@ -22,6 +22,23 @@
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
+## Victor's Notes
+This application consists of a client, and a payment processing microservices. The microservice architecture is command-based using a TCP transport layer.
+
+Technology stack:  
+- nestjs
+- typeorm
+- sqlite3
+- swagger
+- eslint/prettier for code lint compliance
+- jest/assert for e2e testing
+
+Swagger documentation can be viewed at localhost:3000/swagger
+
+~~~I still have a problem getting the e2e tests to work properly, but since this code is for review purposes it will have to suffice. I'll keep working on how to get it done properly in the meantime.~~
+
+The issues for e2e test are resolved and now run correctly. All assertions are correct.
+
 ## Description
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
