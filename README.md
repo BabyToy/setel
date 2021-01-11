@@ -23,7 +23,7 @@
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
 ## Victor's Notes
-This application consists of a client, and a payment processing microservices. The microservice architecture is command-based using a TCP transport layer.
+This application consists of a client, and a payment processing microservice. The microservice architecture is command-based using a TCP transport layer.
 
 Technology stack:  
 - nestjs
