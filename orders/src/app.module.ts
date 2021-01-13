@@ -8,7 +8,16 @@ import { OrdersModule } from "./orders/orders.module";
 
 @Module({
   imports: [
-    ClientsModule.register([{ name: "PAYMENTS_SERVICE", transport: Transport.TCP }]),
+    ClientsModule.register([
+      {
+        name: "PAYMENTS_SERVICE",
+        transport: Transport.TCP,
+        options: {
+          host: "0.0.0.0",
+          port: 3000
+        }
+      }
+    ]),
     OrdersModule
   ],
   controllers: [AppController, OrdersController],
