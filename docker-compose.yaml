@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  payments:
+    image: payments:latest
+    container_name: payments
+    build:
+      context: ./payments
+      dockerfile: Dockerfile
+      # target: prod
+    ports:
+      - 3000:3000
+    networks:
+      - test
+  orders:
+    image: orders:latest
+    container_name: orders
+    build:
+      context: ./orders
+      dockerfile: Dockerfile
+      # target: prod
+    ports:
+      - 3030:3030
+    networks:
+      - test
+    depends_on:
+      - payments
+networks:
+  test:
