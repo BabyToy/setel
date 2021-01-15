@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   payments:
@@ -8,6 +8,8 @@ services:
       context: ./payments
       dockerfile: Dockerfile
       # target: prod
+    environment:
+      - HOST_HOSTNAME=${HOSTNAME}
     ports:
       - 3000:3000
     networks:
@@ -25,5 +27,7 @@ services:
       - test
     depends_on:
       - payments
+    environment:
+      - HOST_HOSTNAME=${HOSTNAME}
 networks:
   test:

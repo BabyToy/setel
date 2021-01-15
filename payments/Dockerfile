@@ -17,5 +17,5 @@ WORKDIR /usr/local/app
 RUN mkdir -p database
 COPY --from=builder /usr/local/app ./
 RUN /usr/bin/sqlite3
-EXPOSE 3000/TCP
+EXPOSE 4000/TCP
 CMD ["yarn", "run", "start:prod"]
