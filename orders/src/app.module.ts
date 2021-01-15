@@ -5,6 +5,8 @@ import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { OrdersController } from "./orders/orders.controller";
 import { OrdersModule } from "./orders/orders.module";
+import { LoginController } from './login/login.controller';
+import { LoginModule } from './login/login.module';
 
 const hostName = process.env.HOST_HOSTNAME ?? "localhost";
 const servicePort = process.env.SERVICE_PORT ? Number(process.env.SERVICE_PORT) : 3000;
@@ -22,9 +24,10 @@ console.log(`Service: ${hostName}:${servicePort}`);
         transport: Transport.TCP
       }
     ]),
-    OrdersModule
+    OrdersModule,
+    LoginModule
   ],
-  controllers: [AppController, OrdersController],
+  controllers: [AppController, OrdersController, LoginController],
   providers: [AppService]
 })
 export class AppModule {
