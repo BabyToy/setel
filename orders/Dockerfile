@@ -13,5 +13,5 @@ FROM mhart/alpine-node:latest
 RUN mkdir -p /usr/local/app
 WORKDIR /usr/local/app
 COPY --from=builder /usr/local/app ./
-EXPOSE 3030
+EXPOSE 3000
 CMD ["yarn", "run", "start:prod"]

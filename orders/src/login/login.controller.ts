@@ -1,19 +1,20 @@
-import { Controller, Post, Res } from "@nestjs/common";
+import { Body, Controller, HttpStatus, Post, Res, UseGuards } from "@nestjs/common";
 import { ApiOperation } from "@nestjs/swagger";
+import { AuthService } from "src/auth/auth.service";
+import { LocalStrategy } from "src/auth/local.strategy";
 import { LoginDto } from "src/common/dto/login.dto";
-
-import { LoginService } from "./login.service";
 
 @Controller("login")
 export class LoginController {
-  constructor(private readonly loginService: LoginService) {}
+  constructor(
+    private readonly authService: AuthService
+  ) {}
 
+  @UseGuards(LocalStrategy)
   @Post()
   @ApiOperation({ summary: "Login for users" })
-  async login(details: LoginDto, @Res() response) {
-    const auth = await this.loginService.login(details);
-    return response.status({status: "Authenticaticated", token: auth});
-    // return response.status(result.status).json({ status: result.status, order: result.order });
-    // throw new HttpException("Under construction", HttpStatus.INTERNAL_SERVER_ERROR);
+  async login(@Body() details: LoginDto, @Res() response) {
+    const auth = await this.authService.authenticate(details);
+    return response.status(HttpStatus.OK).json({ status: "Authenticaticated", token: auth });
   }
 }
