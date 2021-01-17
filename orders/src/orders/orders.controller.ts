@@ -1,6 +1,7 @@
-import { Body, Controller, Get, HttpException, HttpStatus, Inject, Post, Res } from "@nestjs/common";
+import { Body, Controller, Get, HttpException, HttpStatus, Inject, Post, Res, UseGuards } from "@nestjs/common";
 import { ClientProxy } from "@nestjs/microservices";
 import { ApiOperation } from "@nestjs/swagger";
+import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
 import { CreateDto } from "src/common/dto/create.dto";
 import { IdTokenDto } from "src/common/dto/idToken.dto";
 import { OrderDto } from "src/common/dto/order.dto";
@@ -24,6 +25,7 @@ export class OrdersController {
     return text;
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post("verify")
   @ApiOperation({ summary: "Verify an order" })
   async verifyOrder(@Body() order: VerifyDto, @Res() response) {
@@ -36,6 +38,7 @@ export class OrdersController {
     return response.status(result.status).json({ status: result.status, order: result.order });
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post("create")
   @ApiOperation({ summary: "Create an order" })
   async createOrder(@Body() order: CreateDto, @Res() response): Promise<OrderDto> {
@@ -48,6 +51,7 @@ export class OrdersController {
       .json({ status: result.status, order: result.order, message: result.message });
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post("confirm")
   @ApiOperation({ summary: "Confirm an order" })
   async confirmOrder(@Body() order: IdTokenDto, @Res() response): Promise<OrderDto> {
@@ -64,6 +68,7 @@ export class OrdersController {
       .json({ status: result.status, order: result.order, message: result.message });
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post("deliver")
   @ApiOperation({ summary: "Deliver an order" })
   async deliverOrder(@Body() order: IdTokenDto, @Res() response): Promise<OrderDto> {
@@ -79,6 +84,7 @@ export class OrdersController {
       .json({ status: result.status, order: result.order, message: result.message });
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post("cancel")
   @ApiOperation({ summary: "Cancel an order" })
   async cancelOrder(@Body() order: IdTokenDto, @Res() response): Promise<OrderDto> {
