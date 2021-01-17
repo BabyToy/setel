@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 
 @Injectable()

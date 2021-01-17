@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
 import { Strategy } from "passport";
 import { ExtractJwt } from "passport-jwt";
@@ -15,7 +15,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, "jwt") {
     });
   }
 
-  async ValidationPipe(payload: any) {
+  async validate(payload: any) {
     return { userId: payload.sub, userName: payload.username };
   }
 }
