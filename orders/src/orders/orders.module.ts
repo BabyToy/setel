@@ -5,8 +5,7 @@ import { OrdersController } from "./orders.controller";
 
 @Module({
   imports: [
-    ClientsModule.register([{ name: "PAYMENTS_SERVICE", transport: Transport.TCP }]),
-    OrdersModule
+    ClientsModule.register([{ name: "PAYMENTS_SERVICE", transport: Transport.TCP }])
   ],
   controllers: [OrdersController]
 })

@@ -4,16 +4,14 @@ import { Strategy } from "passport-local";
 
 import { AuthService } from "./auth.service";
 
-// const Strategy = require("passport");
-
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
-  constructor(private authService: AuthService) {
-    super({ userName: "userName" });
+  constructor(private readonly authService: AuthService) {
+    super({ username: "userName" });
   }
 
   async validate(userName: string, password: string) {
     // assume users are authenticated just for this test
-    return true;
+    return this.authService.authenticate({ userName, password });
   }
 }
