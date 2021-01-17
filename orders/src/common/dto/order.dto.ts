@@ -7,7 +7,7 @@ export class OrderDto {
   status: number;
 
   @ApiProperty()
-  message?: string;
+  message: string;
 
   @ApiProperty()
   order?: IOrder;

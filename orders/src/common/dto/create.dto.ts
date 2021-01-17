@@ -1,17 +1,14 @@
 import { ApiProperty } from "@nestjs/swagger";
 
 export class CreateDto {
-  @ApiProperty()
+  @ApiProperty({ required: true })
   customerId: number;
 
-  @ApiProperty()
+  @ApiProperty({ required: true })
   item: number;
 
-  @ApiProperty()
+  @ApiProperty({ required: true })
   qty: number;
-
-  @ApiProperty()
-  token: string;
 
   // for e2e testing
   // true if forced approval

@@ -1,9 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 
 export class VerifyDto {
-  @ApiProperty()
+  @ApiProperty({ required: true })
   id: number;
-
-  @ApiProperty()
-  token: string;
 }

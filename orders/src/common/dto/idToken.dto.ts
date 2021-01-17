@@ -1,9 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 
 export class IdTokenDto {
-  @ApiProperty()
+  @ApiProperty({ required: true })
   orderId: number;
-
-  @ApiProperty()
-  token: string;
 }
